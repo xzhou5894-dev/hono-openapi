@@ -1,0 +1,178 @@
+/* eslint-disable ts/ban-ts-comment */
+import type { z } from '@hono/zod-openapi'
+import type { createInsertSchema } from 'drizzle-zod'
+
+import { eq, ilike, or } from 'drizzle-orm'
+
+import db from '#/db'
+import { users } from '#/db/schema'
+
+import type {
+    Newusers,
+} from '../../db/schema'
+
+export async function findManyUser(
+    limit?: number,
+    offset?: number,
+    filter?: { username?: string; email?: string },
+) {
+    const query = db.select().from(users)
+
+    if (filter) {
+        const { username, email } = filter
+        if (username || email) {
+            query.where(
+                or(
+                    username ? ilike(users.username, `%${username}%`) : undefined,
+                    email ? ilike(users.email, `%${email}%`) : undefined,
+                ),
+            )
+        }
+    }
+
+    if (limit) {
+        query.limit(limit)
+    }
+
+    if (offset) {
+        query.offset(offset)
+    }
+
+    return await query
+}
+
+export async function createUser(data: z.infer<ReturnType<typeof createInsertSchema>>) {
+    return await db.insert(users).values(data).returning()
+}
+
+export async function findUserById(id: string) {
+    return await db.select().from(users).where(eq(users.id, id))
+}
+
+export async function updateUser(id: string, data: Partial<Newusers>) {
+    // @ts-ignore
+    return await db.update(User).set(data).where(eq(User.id, id)).returning()
+}
+
+export async function deleteUser(id: string) {
+    return await db.delete(users).where(eq(users.id, id)).returning()
+}
+
+// From Pinia Store & HAR files
+
+export async function checkUser(userId: string) {
+    // Assuming a simple check that returns the user if they exist
+    return await findUserById(userId)
+}
+
+// export async function getUserBalance(userId: string) {
+//   return await db.select().from(balances).where(eq(balances.userId, userId));
+// }
+
+// export async function setUserCurrency(currencyCode: string) {
+//   // This is a simplified example. A real implementation would be more complex.
+//   const currency = await db
+//     .select()
+//     .from(currencies)
+//     .where(eq(currencies.code, currencyCode));
+//   if (currency.length === 0) {
+//     throw new Error("Invalid currency code");
+//   }
+//   // Logic to update user's currency preference would go here.
+//   // For now, we'll just return the currency.
+//   return currency[0];
+// }
+
+export async function sendEmailVerification(userId: string) {
+    // Placeholder for sending a verification email
+    console.log(`Sending verification email to user`, userId)
+    return { status: 'ok', time: Date.now() }
+}
+
+export async function getUserInfo(userId: string) {
+    return await findUserById(userId)
+}
+
+export async function getVipInfo(userId: string) {
+    // Assuming vip info is part of the users table for now
+    return await db
+        .select({ vipInfo: users.vipInfoId })
+        .from(users)
+        .where(eq(users.id, userId))
+}
+
+// New Routes
+export async function getUserAmount() {
+    // Placeholder, you will need to implement the actual logic
+    return {
+        amount: 1000,
+        currency: { fiat: true, name: 'USD', symbol: '$', type: 'fiat' },
+        withdraw: 500,
+        rate: 1,
+    }
+}
+
+export async function updateUserInfo(data: Newusers) {
+    // Placeholder, you will need to implement the actual logic
+    return { data }
+}
+
+export async function updateEmail(data: {
+    email: string;
+    password: string;
+}) {
+    // Placeholder, you will need to implement the actual logic
+    return { ...data }
+}
+
+export async function updatePassword(data: {
+    now_password: string;
+    new_password: string;
+}) {
+    // Placeholder, you will need to implement the actual logic
+    console.log(data)
+}
+
+export async function suspendUser(data: { time: number }) {
+    // Placeholder, you will need to implement the actual logic
+    console.log(data)
+}
+
+// export async function getBalanceList() {
+//   return await db.select().from(balances);
+// }
+
+// Game Routes
+export async function enterGame() {
+    // Placeholder
+    return {}
+}
+
+export async function userGame() {
+    // Placeholder
+    return []
+}
+
+export async function favoriteGame() {
+    // Placeholder
+    return { success: true }
+}
+
+// export async function getGameHistory(userId: string) {
+//   return await db.select().from(GameHistory).where(eq(gameHistory.userId, userId));
+// }
+
+export async function spinPage() {
+    // Placeholder
+    return {}
+}
+
+export async function spin() {
+    // Placeholder
+    return {}
+}
+
+export async function favoriteGameList() {
+    // Placeholder
+    return []
+}

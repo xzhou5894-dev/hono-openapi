@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: asdfasdf
+      POSTGRES_DB: hono
+    ports:
+      - '5439:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - .env.prod
+    ports:
+      - '9999:9999'
+    environment:
+      NODE_ENV: production
+      PORT: 9999
+      LOG_LEVEL: info
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_AUTH_TOKEN: ${DATABASE_AUTH_TOKEN}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      RCLONE_R2_REMOTE: ${RCLONE_R2_REMOTE}
+
+volumes:
+  postgres_data:
+    name: hono_postgres_data

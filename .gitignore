@@ -1,0 +1,14 @@
+# IDE
+.idea/
+.vscode/
+
+# Node
+node_modules/
+dist/
+.env
+.env*.local
+
+# Bun
+.bun/
+
+**/node_modules/

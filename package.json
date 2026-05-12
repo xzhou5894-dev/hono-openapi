@@ -1,0 +1,39 @@
+{
+  "name": "hono-open-api-starter-monorepo",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,magenta\" \"bun --cwd frontend dev\" \"bun --cwd backend dev\"",
+    "start": "bun --cwd backend start",
+    "build": "bun --cwd backend build && bun --cwd frontend build",
+    "format": "bun --cwd backend format && bun --cwd frontend format",
+    "test": "bun --cwd backend test && bun --cwd frontend test",
+    "lint": "bun --cwd backend lint",
+    "lint:fix": "bun --cwd backend lint:fix",
+    "lint:all": "bun --cwd backend lint && bun --cwd frontend lint",
+    "typecheck": "bun --cwd backend typecheck",
+    "typecheck:all": "bun --cwd backend typecheck && bun --cwd frontend typecheck",
+    "seed": "bun --cwd backend seed",
+    "studio": "bun --cwd backend studio",
+    "generate": "bun --cwd backend generate",
+    "push": "bun --cwd backend push",
+    "prod:build": "bash ./scripts/production-build.sh",
+    "prod:start": "bash ./scripts/production-start.sh",
+    "prod:migrate": "bun --cwd backend migrate",
+    "codegen": "bunx @hey-api/openapi-ts -f ./openapi-ts.config.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "bun-types": "^1.2.19",
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.0.0",
+    "@heroicons/vue": "^2.2.0",
+    "gsap": "^3.13.0",
+    "rclone.js": "^0.6.6"
+  }
+}

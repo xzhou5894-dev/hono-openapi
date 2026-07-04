@@ -42,10 +42,10 @@ const ISSUER = 'api.cashflowcasino.com'
 const AUDIENCE = 'web'
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
-    const { username, password, uid } = c.req.valid('json')
+    const { username, password } = c.req.valid('json')
 
-    // Require password AND at least one identifier (username or uid)
-    if (!password || (!username && !uid)) {
+    // Require password AND username
+    if (!password || !username) {
         return c.json(
             { message: HttpStatusPhrases.BAD_REQUEST },
             HttpStatusCodes.BAD_REQUEST
@@ -54,15 +54,9 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
 
     let userRecord: UserType | undefined
     try {
-        if (username) {
-            userRecord = await db.query.users.findFirst({
-                where: eq(users.username, username),
-            })
-        } else if (uid) {
-            userRecord = await db.query.users.findFirst({
-                where: eq(users.id, uid),
-            })
-        }
+        userRecord = await db.query.users.findFirst({
+            where: eq(users.username, username),
+        })
     } catch (error) {
         console.error('Error querying user:', error)
         return c.json(

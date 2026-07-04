@@ -65,7 +65,7 @@ export const websocketHandler = {
 
         // Handle RPC messages for the 'user' topic
         if (parsed && parsed.kind === 'rpc' && topic === 'user') {
-            const rpc = parsed as RpcMessage<'user', keyof any, any>
+            const rpc = parsed as RpcMessage<'user', string, any>
             void handleUserRpc(ws, rpc)
             return
         }

@@ -9,6 +9,7 @@ import {
     selectVipInfoSchema,
     selectWalletSchema,
     userResponseSchema,
+    operatorsResponseSchema,
 } from '#/db/schema'
 import { createRouter } from '#/lib/create-app'
 import { authMiddleware } from '#/middlewares/auth.middleware'
@@ -97,7 +98,7 @@ export const sessionRoute = createRoute({
                 gameSession: selectGameSession.optional().openapi('GameSession'),
                 wallet: selectWalletSchema.openapi('Wallet'),
                 vipInfo: selectVipInfoSchema.openapi('VipInfo'),
-                operator: selectVipInfoSchema.openapi('Operator'),
+                operator: operatorsResponseSchema.optional().openapi('Operator'),
             }),
             'The current user session'
         ),

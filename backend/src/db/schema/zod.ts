@@ -43,6 +43,9 @@ export const userResponseSchema = selectUserSchema.omit({
 export const operatorsResponseSchema = selectOperatorSchema.omit({
     operatorSecret: true,
     operatorAccess: true,
+}).extend({
+    allowedIps: z.array(z.string()),
+    acceptedPayments: z.array(z.string()),
 })
 export const walletResponseSchema = selectWalletSchema
 export const vipInfoResponseSchema = selectVipInfoSchema

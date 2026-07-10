@@ -5,6 +5,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Notification from '@/components/common/Notification.vue'
 import AnimationLayer from '@/components/AnimationLayer.vue'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 import router from './router'
 import { useAuthStore } from '@/stores/auth.store'
 import { useImagePreloader, type PreloadManifest } from '@/composables/useImagePreloader'
@@ -111,4 +112,6 @@ onMounted(() => {
   <component :is="Footer" v-if="showChrome" />
 
   <component :is="Notification" v-if="Notification && isGateReady" />
+
+  <SpeedInsights />
 </template>
